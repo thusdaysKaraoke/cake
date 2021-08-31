@@ -38,7 +38,7 @@ db.users.insertMany([
 
 /* 2 */
 {
-    username: "Maria",
+    username: "maria",
     mail: "maria@cake.it",
     completeName: "Maria Zucchero",
     password: "password"
