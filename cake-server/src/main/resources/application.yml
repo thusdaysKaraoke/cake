@@ -1,0 +1,11 @@
+datasource:
+   mongo:
+      url: "cake-mongo"
+      port: 27017
+      database: "cake"
+      username: "cake-admin"
+      password: "password"
+security:
+   basic:
+      username: "admin"
+      password: "password"

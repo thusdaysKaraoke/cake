@@ -1,0 +1,34 @@
+<div *ngIf="product && product.typeDefinition" class="container-fluid p-5">
+    <div class="card rounded shadow">
+        <div class="card-header">
+            Prodotto {{product.id}} - {{product.typeDefinition.label}} - {{product.creationDate | date:"dd/MM/yyyy"}}
+        </div>
+        <div class="container card-body">
+            <form [formGroup]="editProduct" (ngSubmit)="updateProduct()">
+                <div class="form-group">
+                    <label>ID</label>
+                    <input class="form-control" formControlName="id" type="text" />
+                </div>
+                <div class="form-group">
+                    <label>Tipo Prodotto</label>
+                    <ng-select formControlName="type" [items]="types" bindValue="id" bindLabel="label"></ng-select>
+                </div>
+                <div class="form-group">
+                    <label>Data Creazione</label>
+                    <input formControlName="creationDate" type="date" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Quantità</label>
+                    <input formControlName="quantity" type="number" class="form-control" />
+                </div>
+
+                <div class="py-5 text-center">
+                    <button [disabled]="editProduct.invalid" class="btn btn-success" type="submit">Modifica Prodotto</button>
+                    <button class="btn btn-secondary ml-2" type="undo" (click)="router.navigate(['backoffice', 'products'])">Annulla</button>
+                    <button class="btn btn-danger ml-2" type="button" (click)="deleteProduct()">Elimina Prodotto</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

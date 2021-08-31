@@ -1,0 +1,72 @@
+<div class="container-fluid py-3">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-3 mb-2 ml-auto text-right">
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-primary" id="dropdownBasic1" ngbDropdownToggle>{{sort.label}}</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <ng-container *ngFor="let option of sortOptions">
+                        <button (click)="sortBy(option)" ngbDropdownItem>{{option.label}}</button>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-3 mb-2">
+            <input class="form-control" placeholder="Trova..." [(ngModel)]="filterTerm" />
+        </div>
+    </div>
+
+    <div *ngIf="products" class="row p-3">
+        <div *ngFor="let product of products|filter:{key:'typeDefinition.label', value: filterTerm}|sortBy:sort" class="col-sm-12 col-md-6 col-lg-3 mb-5 ">
+            <div class="card shadow rounded">
+                <div class="card-header text-center user-select-none btn btn-outline-success" [routerLink]="['/products', product.id]">
+                    <img class="w-75 test" src="assets/img/slice-of-cake.svg">
+                </div>
+                <div class="card-body p-0">
+                    <div class="bg-success text-white  text-center py-2">
+                        <div class=" h3 font-weight-bold">
+                            {{product.typeDefinition.label}}
+                        </div>
+                        <div class="h5">
+                            {{product.creationDate | date:"dd/MM/yyyy"}}
+                        </div>
+                    </div>
+                    <div [ngClass]="product.quantity > 0? 'bg-primary':'bg-secondary'" class="text-white text-center py-2">
+                        <div>
+                            <del *ngIf="product.currentPrice < product.typeDefinition.price" class="h5">{{product.typeDefinition.price | number: '1.2'}}
+                                €</del>
+                            <span class="font-weight-bold h3">
+                                {{product.currentPrice | number: '1.2'}} €
+                            </span>
+
+
+                        </div>
+                        <div class="h5">
+                            {{product.quantity}} disponibili
+                        </div>
+                        <div *ngIf="customerService.getFromChart(product.id) as chartProduct else none">
+                            {{chartProduct.quantity}} nel carrello
+                        </div>
+                        <ng-template #none>
+                            <span class="invisible">
+                                -
+                            </span>
+                        </ng-template>
+                    </div>
+
+
+                    <div class=" card-footer text-center py-2">
+                        <button [disabled]="!product.quantity" class="btn btn-sm btn-outline-success" (click)="addToChart(product.id)">
+                            <span *ngIf="product.quantity > 0 else ended">
+                                Aggiungi al carrello
+                            </span>
+                            <ng-template #ended>
+                                Terminato
+                            </ng-template>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

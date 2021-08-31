@@ -1,0 +1,40 @@
+version: '3'
+services:
+  cake-mongo:
+    hostname: cake-mongo
+    container_name: cake-mongo
+    image: cake-mongo
+    build:
+       context: ../cake-mongo/
+    #volumes:
+    # - /opt/cake/mongo/db-files:/data/db
+    ports:
+      - '27017:27017'
+    networks:
+      - cake-network
+    restart: on-failure:10
+  
+  cake-server:
+    container_name: cake-server
+    image: cake-server
+    build:
+       context: ../cake-server/
+    ports:
+      - '8080:8080'
+    networks:
+      - cake-network
+    restart: on-failure:10
+    
+  cake-client:
+    container_name: cake-client
+    image: cake-client
+    build:
+       context: ../cake-client/
+    ports:
+      - '4200:4200'
+    networks:
+      - cake-network
+    restart: on-failure:10
+    
+networks:
+   cake-network:

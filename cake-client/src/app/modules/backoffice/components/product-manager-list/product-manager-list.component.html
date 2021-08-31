@@ -1,0 +1,84 @@
+<div class="container-fluid p-5">
+    <div class="card rounded shadow">
+        <div class="h3 card-header text-center py-3">Gestione Prodotti</div>
+        <div class="card-body">
+            <div class="float-right  py-3"></div>
+            <div class="row">
+                <div class="col-auto  text-right">
+                    <button class="btn btn-success " [routerLink]="[ 'new']">Nuovo Prodotto</button>
+                </div>
+                <div class="col-auto ml-auto mb-2 text-right">
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-warning" id="dropdownBasic1" ngbDropdownToggle>{{selectedFilter.label}}</button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <ng-container *ngFor="let option of filterOptions">
+                                <button (click)="filterBy(option)" ngbDropdownItem>{{option.label}}</button>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto mb-2 text-right">
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-primary" id="dropdownBasic2" ngbDropdownToggle>{{sort.label}}</button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                            <ng-container *ngFor="let option of sortOptions">
+                                <button (click)="sortBy(option)" ngbDropdownItem>{{option.label}}</button>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="user-select-none ">
+
+                <table class="table table-hover table-bordered">
+                    <thead class="thead-dark">
+                        <th>Prodotto N°</th>
+                        <th>Tipo</th>
+                        <th>In magazzino</th>
+                        <th>Data creazione</th>
+                        <th>Prezzo Iniziale</th>
+                        <th>Prezzo Corrente</th>
+                    </thead>
+                    <tbody>
+                        <ng-container
+                            *ngFor="let product of products|filter:{key:'id', value: filterTerm}|filter:selectedFilter |sortBy: sort | slice: (page-1) * pageSize : page * pageSize">
+                            <tr (dblclick)="router.navigate(['backoffice', 'products' , product.id])">
+                                <td>{{product.id}}</td>
+                                <td>{{product.typeDefinition.label}}</td>
+                                <td class="text-right">
+                                    <span *ngIf="product.quantity else ended">
+                                        {{product.quantity|number:'1.0'}}
+                                    </span>
+                                    <ng-template #ended>
+                                        <div class="text-center">
+                                            <span class="badge badge-danger">TERMINATO</span>
+
+                                        </div>
+                                    </ng-template>
+                                </td>
+                                <td>{{product.creationDate | date:'dd/MM/yyyy'}}</td>
+                                <td class="text-right">€ {{product.typeDefinition.price|number:'1.2'}}</td>
+                                <td class="text-right">
+                                    <span *ngIf="product.currentPrice else expired">
+                                        € {{product.currentPrice|number:'1.2'}}
+                                    </span>
+                                    <ng-template #expired>
+                                        <div class="text-center">
+                                            <span class="badge badge-danger">SCADUTO</span>
+
+                                        </div>
+                                    </ng-template>
+                                </td>
+
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <div class="float-right" *ngIf="products && products.length as length">
+                    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="length"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
